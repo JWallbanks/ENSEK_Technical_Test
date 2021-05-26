@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebAPI.DAL;
 using WebAPI.Models;
 using WebAPI.Services;
@@ -18,18 +19,22 @@ namespace WebAPI.UnitTests.Services
         public void Setup()
         {
             _uow = new Mock<IUnitOfWork>();
+
+            // Have the setups by default work as if the csv values are valid for the existing database
+            _uow.Setup(u => u.AccountRepositoryAsync.FindAsync(1))
+                .ReturnsAsync(new Account { AccountId = 1 });
+            _uow.Setup(u => u.MeterReadingRepositoryAsync.DoesMeterReadingExistInDb(1, new DateTime(2000, 1, 1)))
+                .Returns(false);
+            _uow.Setup(u => u.MeterReadingRepositoryAsync.InsertAsync(It.IsAny<MeterReading>()))
+                .ReturnsAsync(() => new MeterReading());
+
+
             _accountService = new AccountService(_uow.Object);
         }
 
-        // Scenarios:
-        // 1) some CsvLines are invalid - those CsvLines aren't added to the database
-        // 2) some CsvLines are invalid - the number of successful valid lines should be returned as the no. of successful readings
-        // 3) invalid if meter reading has the same 'AccountId' & 'Date' as an already existing one.
-        // 4) invalid if meter reading doesn't match an existing 'AccountId'
-        // 5) invalid if reading value isn't in format 'NNNNN'
 
         [Test]
-        public void AddMeterReadingsIfCsvIsValid_CsvContainsValidMeterReading_AddsTheValidMeterReadingToDb()
+        public async Task AddMeterReadingsIfCsvIsValid_CsvContainsValidMeterReading_AddsTheValidMeterReadingToDb()
         {
             var csvLines = new List<string>
             {
@@ -37,14 +42,14 @@ namespace WebAPI.UnitTests.Services
                 "1,01/01/2000 00:00,11111"
             };
 
-            _accountService.AddMeterReadingsIfCsvIsValid(csvLines);
+            await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvLines);
 
             _uow.Verify(u => u.MeterReadingRepositoryAsync
             .InsertAsync(It.Is<MeterReading>(m => m.Account.AccountId == 1 && m.MeterReadValue == 11111)));
         }
 
         [Test]
-        public void AddMeterReadingsIfCsvIsValid_WhenCalled_ReturnsTheNumberOfSuccessfulReadings()
+        public async Task AddMeterReadingsIfCsvIsValid_WhenCalled_ReturnsTheNumberOfSuccessfulReadings()
         {
             var csvLines = new List<string>
             {
@@ -54,13 +59,13 @@ namespace WebAPI.UnitTests.Services
                 "b,b,b",
             };
 
-            var result = _accountService.AddMeterReadingsIfCsvIsValid(csvLines);
+            var result = await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvLines);
 
             Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
-        public void AddMeterReadingsIfCsvIsValid_MeterReadingHasSameAccountIdAndDateAsExistingReadingInDb_DoesNotAddMeterReadingToDb()
+        public async Task AddMeterReadingsIfCsvIsValid_MeterReadingHasSameAccountIdAndDateAsExistingReadingInDb_DoesNotAddMeterReadingToDb()
         {
             var csvLines = new List<string>
             {
@@ -70,13 +75,13 @@ namespace WebAPI.UnitTests.Services
             _uow.Setup(u => u.MeterReadingRepositoryAsync.DoesMeterReadingExistInDb(1, new DateTime(2000, 1, 1)))
                 .Returns(true);
 
-            _accountService.AddMeterReadingsIfCsvIsValid(csvLines);
+            await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvLines);
 
             _uow.Verify(u => u.MeterReadingRepositoryAsync.InsertAsync(It.IsAny<MeterReading>()), Times.Never);
         }
 
         [Test]
-        public void AddMeterReadingsIfCsvIsValid_MeterReadingAccountIdDoesNotExistInDb_DoesNotAddMeterReadingToDb()
+        public async Task AddMeterReadingsIfCsvIsValid_MeterReadingAccountIdDoesNotExistInDb_DoesNotAddMeterReadingToDb()
         {
             var csvLines = new List<string>
             {
@@ -86,7 +91,7 @@ namespace WebAPI.UnitTests.Services
             _uow.Setup(u => u.AccountRepositoryAsync.FindAsync(1))
                 .ReturnsAsync(() => null);
 
-            _accountService.AddMeterReadingsIfCsvIsValid(csvLines);
+            await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvLines);
 
             _uow.Verify(u => u.MeterReadingRepositoryAsync.InsertAsync(It.IsAny<MeterReading>()), Times.Never);
         }
@@ -97,7 +102,7 @@ namespace WebAPI.UnitTests.Services
         [TestCase("111")]
         [TestCase("11")]
         [TestCase("1")]
-        public void AddMeterReadingsIfCsvIsValid_MeterReadingValueNotFiveDigits_DoesNotAddMeterReadingToDb(string meterReadingValue)
+        public async Task AddMeterReadingsIfCsvIsValid_MeterReadingValueNotFiveDigits_DoesNotAddMeterReadingToDb(string meterReadingValue)
         {
             var csvLines = new List<string>
             {
@@ -105,7 +110,7 @@ namespace WebAPI.UnitTests.Services
                 "1,01/01/2000 00:00," + meterReadingValue,
             };
 
-            _accountService.AddMeterReadingsIfCsvIsValid(csvLines);
+            await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvLines);
 
             _uow.Verify(u => u.MeterReadingRepositoryAsync.InsertAsync(It.IsAny<MeterReading>()), Times.Never);
         }

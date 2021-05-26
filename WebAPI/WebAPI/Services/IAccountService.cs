@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebAPI.Services
 {
@@ -8,6 +9,6 @@ namespace WebAPI.Services
         /// 
         /// </summary>
         /// <returns>the number of meter readings that were successfully added to the database</returns>
-        public int AddMeterReadingsIfCsvIsValid(IEnumerable<string> csvFileLines);
+        public Task<int> AddMeterReadingsToDbIfCsvIsValidAsync(IEnumerable<string> csvFileLines);
     }
 }
