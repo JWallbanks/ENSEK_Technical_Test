@@ -14,8 +14,8 @@ namespace WebAPI.Extensions
 
         private static void SeedAccounts(ModelBuilder modelBuilder, ICsvToModelService csvToModelService)
         {
-            var accountsCsvFileName = $"Files/Test_Accounts.csv";
-            IEnumerable<Account> list = csvToModelService.CreateAccountsFromCsvFile(accountsCsvFileName);
+            var accountsCsvFilepath = @"\Files\Test_Accounts.csv";
+            IEnumerable<Account> list = csvToModelService.CreateAccountsFromCsvFile(accountsCsvFilepath);
 
             modelBuilder.Entity<Account>().HasData(list);
         }

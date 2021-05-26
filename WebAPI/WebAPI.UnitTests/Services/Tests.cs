@@ -1,18 +1,16 @@
 ﻿using NUnit.Framework;
 using System;
-using WebAPI.Services;
 
 namespace WebAPI.UnitTests.Services
 {
     [TestFixture]
-    public class CsvToModelServiceTests
+    public class Tests
     {
-        private CsvToModelService _service;
+
 
         [SetUp]
         public void Setup()
         {
-            _service = new CsvToModelService();
         }
 
 
