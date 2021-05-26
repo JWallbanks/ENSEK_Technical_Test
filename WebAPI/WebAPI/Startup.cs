@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebAPI.DAL;
 using WebAPI.Models;
 using WebAPI.Services;
 
@@ -30,11 +31,15 @@ namespace WebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ensek API", Version = "v1" });
             });
 
-            services.AddScoped(typeof(IAccountService), typeof(AccountService));
             services.AddScoped(typeof(ICsvToModelService), typeof(CsvToModelService));
 
             services.AddDbContext<EnsekContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("EnsekContext")));
+
+            services.AddScoped(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(IAccountService), typeof(AccountService));
+
 
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using WebAPI.Services;
 
 namespace WebAPI.Controllers
@@ -17,9 +18,12 @@ namespace WebAPI.Controllers
 
         [HttpPost]
         [Route("meter-reading-uploads")]
-        public IActionResult meterReadingUploads()
+        public IActionResult meterReadingUploads(IEnumerable<string> csvFileLines)
         {
-            return Ok(45);
+
+            var numOfSuccessfulReadings = _accountService.AddMeterReadingsIfCsvIsValid(csvFileLines);
+            return Ok(numOfSuccessfulReadings);
+
         }
     }
 }
