@@ -8,9 +8,10 @@ namespace WebAPI.Services
 {
     public class CsvToModelService : ICsvToModelService
     {
-        public IEnumerable<Account> CreateAccountsFromCsvFile(string fileName)
+        public IEnumerable<Account> CreateAccountsFromCsvFile(string filepath)
         {
-            var accounts = File.ReadAllLines(fileName)
+            filepath = Directory.GetCurrentDirectory() + filepath;
+            var accounts = File.ReadAllLines(filepath)
                 .Skip(1)
                 .Select(line => CreateAccountFromCsvLine(line))
                 .ToList();
