@@ -7,13 +7,13 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : Controller
+    public class MeterReadingController : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly IMeterReadingService _meterReadingService;
 
-        public AccountController(IAccountService accountService)
+        public MeterReadingController(IMeterReadingService meterReadingService)
         {
-            _accountService = accountService;
+            _meterReadingService = meterReadingService;
         }
 
 
@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         [Route("meter-reading-uploads")]
         public async Task<IActionResult> meterReadingUploads(IEnumerable<string> csvFileLines)
         {
-            var numOfSuccessfulReadings = await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvFileLines);
+            var numOfSuccessfulReadings = await _meterReadingService.AddMeterReadingsToDbIfCsvIsValidAsync(csvFileLines);
             return Ok(numOfSuccessfulReadings);
 
         }

@@ -8,11 +8,11 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public class AccountService : IAccountService
+    public class MeterReadingService : IMeterReadingService
     {
         private readonly IUnitOfWork _uow;
 
-        public AccountService(IUnitOfWork uow)
+        public MeterReadingService(IUnitOfWork uow)
         {
             _uow = uow;
         }
