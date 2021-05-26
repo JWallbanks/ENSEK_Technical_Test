@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using WebAPI.Models;
 
@@ -34,9 +33,9 @@ namespace WebAPI.DAL
 
         #region Insert Functions
 
-        public virtual async Task<T> InsertAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task<T> InsertAsync(T entity)
         {
-            await _dbSet.AddAsync(entity, cancellationToken);
+            await _dbSet.AddAsync(entity);
             return entity;
         }
 
@@ -47,9 +46,9 @@ namespace WebAPI.DAL
         }
 
 
-        public virtual async Task InsertAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+        public virtual async Task InsertAsync(IEnumerable<T> entities)
         {
-            await _dbSet.AddRangeAsync(entities, cancellationToken);
+            await _dbSet.AddRangeAsync(entities);
         }
 
         #endregion

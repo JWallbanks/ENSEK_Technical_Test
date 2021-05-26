@@ -7,13 +7,13 @@ namespace WebAPI.DAL
     {
         private readonly EnsekContext _context;
 
-        public IRepositoryAsync<MeterReading> MeterReadingRepositoryAsync { get; }
+        public IMeterReadingRepositoryAsync MeterReadingRepositoryAsync { get; }
         public IRepositoryAsync<Account> AccountRepositoryAsync { get; }
 
         public UnitOfWork
             (
             EnsekContext context,
-            IRepositoryAsync<MeterReading> meterReadingRepositoryAsync,
+            IMeterReadingRepositoryAsync meterReadingRepositoryAsync,
             IRepositoryAsync<Account> accountRepositoryAsync
             )
         {

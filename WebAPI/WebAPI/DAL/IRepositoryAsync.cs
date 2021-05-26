@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebAPI.DAL
@@ -20,12 +19,11 @@ namespace WebAPI.DAL
 
         #region Insert Functions
 
-        Task<T> InsertAsync(T entity, CancellationToken cancellationToken = default);
+        Task<T> InsertAsync(T entity);
 
         Task InsertAsync(params T[] entities);
 
-        Task InsertAsync(IEnumerable<T> entities,
-            CancellationToken cancellationToken = default);
+        Task InsertAsync(IEnumerable<T> entities);
 
         #endregion
 

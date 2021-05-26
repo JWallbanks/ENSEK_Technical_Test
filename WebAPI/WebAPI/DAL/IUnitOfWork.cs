@@ -7,7 +7,7 @@ namespace WebAPI.DAL
     public interface IUnitOfWork : IDisposable
     {
         IRepositoryAsync<Account> AccountRepositoryAsync { get; }
-        IRepositoryAsync<MeterReading> MeterReadingRepositoryAsync { get; }
+        IMeterReadingRepositoryAsync MeterReadingRepositoryAsync { get; }
 
         Task CommitAsync();
     }
