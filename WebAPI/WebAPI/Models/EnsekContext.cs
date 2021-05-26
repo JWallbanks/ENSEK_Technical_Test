@@ -14,6 +14,7 @@ namespace WebAPI.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<MeterReading> MeterReadings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
