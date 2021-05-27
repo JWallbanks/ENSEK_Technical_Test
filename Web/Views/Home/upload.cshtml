@@ -51,7 +51,7 @@
             formData.append('file', file);
 
             $.ajax({
-                url: 'Ajax_UploadCsvFile',
+                url: window.location.origin + '/Ajax_UploadCsvFile',
                 type: 'POST',
                 data: formData,
                 processData: false,  // tell jQuery not to process the data
