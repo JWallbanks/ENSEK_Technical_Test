@@ -8,9 +8,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AccountController : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly IAccountControllerService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountControllerService accountService)
         {
             _accountService = accountService;
         }

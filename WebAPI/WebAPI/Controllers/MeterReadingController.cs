@@ -9,9 +9,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class MeterReadingController : Controller
     {
-        private readonly IMeterReadingService _meterReadingService;
+        private readonly IMeterReadingControllerService _meterReadingService;
 
-        public MeterReadingController(IMeterReadingService meterReadingService)
+        public MeterReadingController(IMeterReadingControllerService meterReadingService)
         {
             _meterReadingService = meterReadingService;
         }

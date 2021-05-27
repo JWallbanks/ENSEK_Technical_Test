@@ -5,6 +5,6 @@ namespace WebAPI.Services
 {
     public interface ICsvToModelService
     {
-        IEnumerable<Account> CreateAccountsFromCsvFile(string fileName);
+        IEnumerable<Account> CreateAccountsFromCsvFile(string filepath);
     }
 }

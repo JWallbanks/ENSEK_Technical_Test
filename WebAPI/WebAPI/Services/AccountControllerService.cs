@@ -7,11 +7,11 @@ using WebAPI.DTOs;
 
 namespace WebAPI.Services
 {
-    public class AccountService : IAccountService
+    public class AccountControllerService : IAccountControllerService
     {
         private readonly IUnitOfWork _uow;
 
-        public AccountService(IUnitOfWork uow)
+        public AccountControllerService(IUnitOfWork uow)
         {
             _uow = uow;
         }
@@ -20,9 +20,8 @@ namespace WebAPI.Services
         {
             var accounts = await _uow.AccountRepositoryAsync.GetEntireListAsync();
 
-            var accountDtos = accounts
-                .Select(a => new AccountDto
-                { AccountId = a.AccountId, FirstName = a.FirstName, LastName = a.LastName }
+            var accountDtos = accounts.Select(a => new AccountDto
+            { AccountId = a.AccountId, FirstName = a.FirstName, LastName = a.LastName }
                 ).ToList();
 
             return accountDtos;

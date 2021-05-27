@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Services
 {
-    public interface IMeterReadingService
+    public interface IMeterReadingControllerService
     {
         /// <summary>
         /// 
