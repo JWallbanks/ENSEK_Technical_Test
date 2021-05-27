@@ -8,5 +8,6 @@ namespace Web.Services
     {
         Task<int> AddMeterReadingsToDbFromCsvLinesAsync(IEnumerable<string> csvLines);
         Task<IEnumerable<AccountDto>> GetAllAccountsAsync();
+        Task<AccountWithMeterReadingsDto> GetAccountWithMeterReadingsAsync(int accountId);
     }
 }

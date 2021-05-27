@@ -8,13 +8,13 @@ namespace WebAPI.DAL
         private readonly EnsekContext _context;
 
         public IMeterReadingRepositoryAsync MeterReadingRepositoryAsync { get; }
-        public IRepositoryAsync<Account> AccountRepositoryAsync { get; }
+        public IAccountRepositoryAsync AccountRepositoryAsync { get; }
 
         public UnitOfWork
             (
             EnsekContext context,
             IMeterReadingRepositoryAsync meterReadingRepositoryAsync,
-            IRepositoryAsync<Account> accountRepositoryAsync
+            IAccountRepositoryAsync accountRepositoryAsync
             )
         {
             _context = context;

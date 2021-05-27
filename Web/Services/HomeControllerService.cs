@@ -27,5 +27,11 @@ namespace Web.Services
             return accountDtos;
         }
 
+        public async Task<AccountWithMeterReadingsDto> GetAccountWithMeterReadingsAsync(int accountId)
+        {
+            var accountWithMeterReadingsDto = await _accountApiService.GetAccountWithMeterReadingsDtoAsync(accountId);
+            return accountWithMeterReadingsDto;
+        }
+
     }
 }

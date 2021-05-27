@@ -1,5 +1,33 @@
-﻿
+﻿@using Web.DTOs;
+@model AccountWithMeterReadingsDto
+
 @{
-    ViewData["Title"] = "Account - Details";
+    var title = "Account - " + Model.Account.FullName;
+
+    ViewData["Title"] = title;
     Layout = "_Layout";
 }
+
+<h1 class="mb-5">@title</h1>
+
+<h3>Meter Readings</h3>
+<table class="table mt-5">
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Value</th>
+    </tr>
+
+    @for (var i = 0; i < Model.MeterReadings.Count; i++)
+    {
+        var meterReading = Model.MeterReadings[i];
+
+        <tr>
+            <td>@meterReading.MeterReadingId</td>
+            <td>@meterReading.MeterReadingDate</td>
+            <td>@meterReading.MeterReadingValue</td>
+
+        </tr>
+    }
+
+</table>

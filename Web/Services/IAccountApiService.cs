@@ -7,5 +7,6 @@ namespace Web.Services
     public interface IAccountApiService
     {
         Task<IEnumerable<AccountDto>> GetAllAccountDtosAsync();
+        Task<AccountWithMeterReadingsDto> GetAccountWithMeterReadingsDtoAsync(int accountId);
     }
 }

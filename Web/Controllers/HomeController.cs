@@ -58,9 +58,11 @@ namespace Web.Controllers
         }
 
         [Route("{accountId}")]
-        public IActionResult Details(int accountId)
+        public async Task<IActionResult> Details(int accountId)
         {
-            return View();
+            var vm = await _service.GetAccountWithMeterReadingsAsync(accountId);
+
+            return View(vm);
         }
 
     }

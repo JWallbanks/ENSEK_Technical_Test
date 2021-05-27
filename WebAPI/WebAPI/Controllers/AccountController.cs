@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Services;
 
@@ -25,7 +22,14 @@ namespace WebAPI.Controllers
         {
             var accountDtos = await _accountService.GetAllAccountsAsDtosAsync();
             return Ok(accountDtos);
+        }
 
+        [HttpGet]
+        [Route("get-account-with-meter-readings/{accountId}")]
+        public async Task<IActionResult> GetAccountWithMeterReadings(int accountId)
+        {
+            var accountWithMeterReadingsDto = await _accountService.GetAccountWithMeterReadingsDtoAsync(accountId);
+            return Ok(accountWithMeterReadingsDto);
         }
     }
 }

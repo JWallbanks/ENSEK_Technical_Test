@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Web.DTOs;
@@ -26,6 +24,17 @@ namespace Web.Services
 
             var accountDtos = JsonConvert.DeserializeObject<IEnumerable<AccountDto>>(result);
             return accountDtos;
+        }
+
+        public async Task<AccountWithMeterReadingsDto> GetAccountWithMeterReadingsDtoAsync(int accountId)
+        {
+            string apiCall = $"api/account/get-account-with-meter-readings/{accountId}";
+
+            var response = await _httpClient.GetAsync(apiCall);
+            var result = await response.Content.ReadAsStringAsync();
+
+            var accountWithMeterReadingsDto = JsonConvert.DeserializeObject<AccountWithMeterReadingsDto>(result);
+            return accountWithMeterReadingsDto;
         }
     }
 }
