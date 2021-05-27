@@ -18,7 +18,7 @@ namespace Web.Services
 
         public async Task<int> AddMeterReadingsToDbFromCsvLinesAsync(IEnumerable<string> csvLines)
         {
-            string apiCall = "api/meterReading/meter-reading-uploads";
+            string apiCall = "meter-reading-uploads";
 
             string json = JsonConvert.SerializeObject(csvLines);
             StringContent data = new StringContent(json, Encoding.UTF8, "application/json");

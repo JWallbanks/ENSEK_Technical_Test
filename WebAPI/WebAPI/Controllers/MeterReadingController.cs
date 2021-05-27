@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPost]
-        [Route("meter-reading-uploads")]
+        [Route("~/meter-reading-uploads")]
         public async Task<IActionResult> meterReadingUploads(IEnumerable<string> csvFileLines)
         {
             var numOfSuccessfulReadings = await _meterReadingService.AddMeterReadingsToDbIfCsvIsValidAsync(csvFileLines);
