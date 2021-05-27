@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Web.DTOs;
 using Web.Services;
 
 namespace Web.Controllers
@@ -49,7 +50,12 @@ namespace Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var vm = new List<AccountDto>
+            {
+                new AccountDto{FirstName = "John", LastName = "Smith"}
+            };
+
+            return View(vm);
         }
 
         [Route("{accountId}")]
