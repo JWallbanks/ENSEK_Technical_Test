@@ -8,11 +8,11 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public class MeterReadingService : IMeterReadingService
+    public class MeterReadingControllerService : IMeterReadingControllerService
     {
         private readonly IUnitOfWork _uow;
 
-        public MeterReadingService(IUnitOfWork uow)
+        public MeterReadingControllerService(IUnitOfWork uow)
         {
             _uow = uow;
         }
@@ -41,20 +41,14 @@ namespace WebAPI.Services
             {
                 string[] values = csvLine.Split(',');
                 var accountId = Convert.ToInt32(values[0]);
+                var meterReadingDate = Convert.ToDateTime(values[1]);
+                var meterReadValue = Convert.ToInt32(values[2]);
                 var account = await _uow.AccountRepositoryAsync.FindAsync(accountId);
-                if (account == null)
+
+                if (!IsValuesValid(account, meterReadingDate, meterReadValue))
                     return false;
 
-                var meterReading = new MeterReading();
-                meterReading.Account = account;
-                meterReading.MeterReadingDate = Convert.ToDateTime(values[1]);
-                meterReading.MeterReadValue = Convert.ToInt32(values[2]);
-
-                if (_uow.MeterReadingRepositoryAsync.DoesMeterReadingExistInDb(accountId, meterReading.MeterReadingDate))
-                    return false;
-
-                if (!Regex.IsMatch(meterReading.MeterReadValue.ToString(), @"^\d{5}$"))
-                    return false;
+                MeterReading meterReading = CreateMeterReading(meterReadingDate, meterReadValue, account);
 
                 await _uow.MeterReadingRepositoryAsync.InsertAsync(meterReading);
                 return true;
@@ -64,5 +58,30 @@ namespace WebAPI.Services
                 return false;
             }
         }
+
+
+        private bool IsValuesValid(Account account, DateTime meterReadingDate, int meterReadValue)
+        {
+            if (account == null)
+                return false;
+
+            if (_uow.MeterReadingRepositoryAsync.DoesMeterReadingExistInDb(account.AccountId, meterReadingDate))
+                return false;
+
+            if (!Regex.IsMatch(meterReadValue.ToString(), @"^\d{5}$"))
+                return false;
+
+            return true;
+        }
+
+        private MeterReading CreateMeterReading(DateTime meterReadingDate, int meterReadValue, Account account)
+        {
+            var meterReading = new MeterReading();
+            meterReading.Account = account;
+            meterReading.MeterReadingDate = meterReadingDate;
+            meterReading.MeterReadValue = meterReadValue;
+            return meterReading;
+        }
+
     }
 }

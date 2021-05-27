@@ -18,11 +18,7 @@ namespace Web.Services
         public async Task<IEnumerable<AccountDto>> GetAllAccountDtosAsync()
         {
             string apiCall = "api/account/get-all-accounts";
-
-            var response = await _httpClient.GetAsync(apiCall);
-            var result = await response.Content.ReadAsStringAsync();
-
-            var accountDtos = JsonConvert.DeserializeObject<IEnumerable<AccountDto>>(result);
+            IEnumerable<AccountDto> accountDtos = await GetObjectFromApiCallAsync<IEnumerable<AccountDto>>(apiCall);
             return accountDtos;
         }
 
@@ -30,11 +26,17 @@ namespace Web.Services
         {
             string apiCall = $"api/account/get-account-with-meter-readings/{accountId}";
 
+            var accountWithMeterReadingsDto = await GetObjectFromApiCallAsync<AccountWithMeterReadingsDto>(apiCall);
+            return accountWithMeterReadingsDto;
+        }
+
+        private async Task<T> GetObjectFromApiCallAsync<T>(string apiCall) where T : class
+        {
             var response = await _httpClient.GetAsync(apiCall);
             var result = await response.Content.ReadAsStringAsync();
 
-            var accountWithMeterReadingsDto = JsonConvert.DeserializeObject<AccountWithMeterReadingsDto>(result);
-            return accountWithMeterReadingsDto;
+            var resultObject = JsonConvert.DeserializeObject<T>(result);
+            return resultObject;
         }
     }
 }
