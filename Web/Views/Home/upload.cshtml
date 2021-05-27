@@ -3,3 +3,68 @@
     ViewData["Title"] = "Upload";
     Layout = "_Layout";
 }
+
+<div class="mt-5">
+    <input id="upload-input" type="file">
+</div>
+<div class="mt-3">
+    <button id="button" class="btn btn-primary">Upload CSV file</button>
+</div>
+
+<span id="message"></span>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#button").click(function () {
+                var uploadInputElem = $("#upload-input")[0];
+
+                var errorMessage = checkFileIsValid(uploadInputElem);
+                if (errorMessage != null) {
+                    $("#message").css("color", "red");
+                    $("#message").text(errorMessage);
+                    return;
+                }
+
+                var file = uploadInputElem.files[0];
+                uploadFile(file);
+
+
+            });
+
+        });
+
+        function checkFileIsValid(uploadInputElem) {
+
+            if (uploadInputElem.files.length == 0)
+                return "Error: no file is present";
+
+            if (!uploadInputElem.files[0].name.endsWith(".csv"))
+                return "Error: file isn't of type .csv";
+        }
+
+        function uploadFile(file) {
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: 'Ajax_UploadCsvFile',
+                type: 'POST',
+                data: formData,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,  // tell jQuery not to set contentType
+                success: function (successfulReadings) {
+
+                    alert(successfulReadings);
+                    $("#message").css("color", "green");
+                    $("#message").text("successful readings: " + successfulReadings);
+                }
+            });
+
+        }
+
+    </script>
+}

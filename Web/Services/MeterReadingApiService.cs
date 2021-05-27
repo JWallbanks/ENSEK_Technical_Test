@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Web.Services
@@ -17,7 +18,16 @@ namespace Web.Services
 
         public async Task<int> AddMeterReadingsToDbFromCsvLinesAsync(IEnumerable<string> csvLines)
         {
-            throw new NotImplementedException();
+            string apiCall = "api/meterReading/meter-reading-uploads";
+
+            string json = JsonConvert.SerializeObject(csvLines);
+            StringContent data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(apiCall, data);
+            var result = await response.Content.ReadAsStringAsync();
+            var successfulReadings = Convert.ToInt32(result);
+
+            return successfulReadings;
         }
     }
 }
