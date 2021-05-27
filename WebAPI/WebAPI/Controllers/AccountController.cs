@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAPI.Services;
 
@@ -17,13 +16,20 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost]
-        [Route("meter-reading-uploads")]
-        public async Task<IActionResult> meterReadingUploads(IEnumerable<string> csvFileLines)
+        [HttpGet]
+        [Route("get-all-accounts")]
+        public async Task<IActionResult> GetAllAccounts()
         {
-            var numOfSuccessfulReadings = await _accountService.AddMeterReadingsToDbIfCsvIsValidAsync(csvFileLines);
-            return Ok(numOfSuccessfulReadings);
+            var accountDtos = await _accountService.GetAllAccountsAsDtosAsync();
+            return Ok(accountDtos);
+        }
 
+        [HttpGet]
+        [Route("get-account-with-meter-readings/{accountId}")]
+        public async Task<IActionResult> GetAccountWithMeterReadings(int accountId)
+        {
+            var accountWithMeterReadingsDto = await _accountService.GetAccountWithMeterReadingsDtoAsync(accountId);
+            return Ok(accountWithMeterReadingsDto);
         }
     }
 }

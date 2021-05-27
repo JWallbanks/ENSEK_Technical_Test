@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Web.DTOs;
 using WebAPI.DAL;
-using WebAPI.Models;
+using WebAPI.DTOs;
 
 namespace WebAPI.Services
 {
@@ -17,52 +16,44 @@ namespace WebAPI.Services
             _uow = uow;
         }
 
-        public async Task<int> AddMeterReadingsToDbIfCsvIsValidAsync(IEnumerable<string> csvFileLines)
+        public async Task<IEnumerable<AccountDto>> GetAllAccountsAsDtosAsync()
         {
-            var csvLinesList = csvFileLines.ToList();
-            var successfulReadings = 0;
+            var accounts = await _uow.AccountRepositoryAsync.GetEntireListAsync();
 
-            // i = 1 to skip the line with column headings
-            for (var i = 1; i < csvLinesList.Count; i++)
-            {
-                var csvLine = csvLinesList[i];
-                var isSuccessfulReading = await AddMeterReadingToDbIfCsvIsValidAsync(csvLine);
-                if (isSuccessfulReading)
-                    successfulReadings++;
-            }
-            await _uow.CommitAsync();
+            var accountDtos = accounts
+                .Select(a => new AccountDto
+                { AccountId = a.AccountId, FirstName = a.FirstName, LastName = a.LastName }
+                ).ToList();
 
-            return successfulReadings;
+            return accountDtos;
         }
 
-        private async Task<bool> AddMeterReadingToDbIfCsvIsValidAsync(string csvLine)
+        public async Task<AccountWithMeterReadingsDto> GetAccountWithMeterReadingsDtoAsync(int accountId)
         {
-            try
+            var accountWithMeterReadings = await _uow.AccountRepositoryAsync.GetAccountWithMeterReadings(accountId);
+
+            var accountDto = new AccountDto
             {
-                string[] values = csvLine.Split(',');
-                var accountId = Convert.ToInt32(values[0]);
-                var account = await _uow.AccountRepositoryAsync.FindAsync(accountId);
-                if (account == null)
-                    return false;
+                AccountId = accountWithMeterReadings.AccountId,
+                FirstName = accountWithMeterReadings.FirstName,
+                LastName = accountWithMeterReadings.LastName
+            };
 
-                var meterReading = new MeterReading();
-                meterReading.Account = account;
-                meterReading.MeterReadingDate = Convert.ToDateTime(values[1]);
-                meterReading.MeterReadValue = Convert.ToInt32(values[2]);
-
-                if (_uow.MeterReadingRepositoryAsync.DoesMeterReadingExistInDb(accountId, meterReading.MeterReadingDate))
-                    return false;
-
-                if (!Regex.IsMatch(meterReading.MeterReadValue.ToString(), @"^\d{5}$"))
-                    return false;
-
-                await _uow.MeterReadingRepositoryAsync.InsertAsync(meterReading);
-                return true;
-            }
-            catch (Exception ex)
+            var accountWithMeterReadingsDto = new AccountWithMeterReadingsDto
             {
-                return false;
-            }
+                Account = accountDto,
+                MeterReadings = accountWithMeterReadings.MeterReadings
+                .Select(m => new MeterReadingDto
+                {
+                    MeterReadingId = m.MeterReadingId,
+                    MeterReadingDate = m.MeterReadingDate,
+                    MeterReadingValue = m.MeterReadValue
+                }
+                ).ToList()
+            };
+
+            return accountWithMeterReadingsDto;
         }
+
     }
 }

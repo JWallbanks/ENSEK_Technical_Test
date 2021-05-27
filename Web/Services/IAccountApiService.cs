@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.DTOs;
-using WebAPI.DTOs;
 
-namespace WebAPI.Services
+namespace Web.Services
 {
-    public interface IAccountService
+    public interface IAccountApiService
     {
-        Task<IEnumerable<AccountDto>> GetAllAccountsAsDtosAsync();
+        Task<IEnumerable<AccountDto>> GetAllAccountDtosAsync();
         Task<AccountWithMeterReadingsDto> GetAccountWithMeterReadingsDtoAsync(int accountId);
     }
 }

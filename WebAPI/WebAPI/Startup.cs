@@ -38,7 +38,9 @@ namespace WebAPI
 
             services.AddScoped(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
             services.AddScoped(typeof(IMeterReadingRepositoryAsync), typeof(MeterReadingRepositoryAsync));
+            services.AddScoped(typeof(IAccountRepositoryAsync), typeof(AccountRepositoryAsync));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(IMeterReadingService), typeof(MeterReadingService));
             services.AddScoped(typeof(IAccountService), typeof(AccountService));
 
 
