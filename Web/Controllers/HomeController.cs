@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Web.DTOs;
 using Web.Services;
@@ -48,12 +49,10 @@ namespace Web.Controllers
 
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var vm = new List<AccountDto>
-            {
-                new AccountDto{FirstName = "John", LastName = "Smith"}
-            };
+            IEnumerable<AccountDto> accountDtos = await _service.GetAllAccountsAsync();
+            var vm = accountDtos.ToList();
 
             return View(vm);
         }

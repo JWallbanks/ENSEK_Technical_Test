@@ -27,6 +27,9 @@ namespace Web
             services.AddHttpClient<IMeterReadingApiService, MeterReadingApiService>(client =>
                 client.BaseAddress = new Uri(Configuration["ApiBaseAddress"]));
 
+            services.AddHttpClient<IAccountApiService, AccountApiService>(client =>
+                client.BaseAddress = new Uri(Configuration["ApiBaseAddress"]));
+
             services.AddScoped(typeof(IHomeControllerService), typeof(HomeControllerService));
         }
 
